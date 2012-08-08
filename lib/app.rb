@@ -1,14 +1,8 @@
 module FakeClearsale
   class App < Sinatra::Base
     get "/" do
-      # require "pry"
-      # binding.pry
-      # if params[:wsdl]
-        path = File.join(File.dirname(__FILE__), "../clearsale/wsdl.xml")
-        File.read(path)
-      # else
-      #   status 404
-      # end
+      path = File.join(File.dirname(__FILE__), "../clearsale/wsdl.xml")
+      File.read(path)
     end
 
     post "/SendOrders" do
