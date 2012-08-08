@@ -1,5 +1,16 @@
 module FakeClearsale
   class App < Sinatra::Base
+    get "/" do
+      # require "pry"
+      # binding.pry
+      # if params[:wsdl]
+        path = File.join(File.dirname(__FILE__), "../clearsale/wsdl.xml")
+        File.read(path)
+      # else
+      #   status 404
+      # end
+    end
+
     post "/SendOrders" do
       order = Nokogiri::XML(params[:xml]).css('Orders > Order')
 
