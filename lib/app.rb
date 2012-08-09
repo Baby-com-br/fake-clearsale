@@ -1,8 +1,11 @@
 module FakeClearsale
   class App < Sinatra::Base
     get "/" do
-      path = File.join(File.dirname(__FILE__), "../clearsale/wsdl.xml")
-      send_file path
+      wsdl
+    end
+
+    post "/" do
+      wsdl
     end
 
     post "/SendOrders" do
@@ -68,6 +71,12 @@ module FakeClearsale
 
     def status_and_score(name)
       name == "Fulano Confiavel" ? ["APA", "95.9800"] : ["RPA", "40.9320"]
+    end
+
+    def wsdl
+      headers "Cache-Control" => "private, max-age=0", "Content-Type" => "text/xml"
+      path = File.join(File.dirname(__FILE__), "../clearsale/wsdl.xml")
+      send_file path
     end
   end
 end
