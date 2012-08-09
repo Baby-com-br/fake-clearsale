@@ -5,11 +5,19 @@ module FakeClearsale
     end
 
     post "/" do
-      wsdl
+      doc = Nokogiri::XML(request.body.read.gsub(/&lt;/, "<").gsub(/&gt;/, ">"))
+      if !doc.xpath("//int:SendOrders").empty?
+        process_send_orders doc
+      elsif !doc.xpath("//int:GetOrderStatus").empty?
+        order_id = doc.xpath("//orderID").inner_text
+        process_get_order_status order_id
+      else
+        wsdl
+      end
     end
 
-    post "/SendOrders" do
-      order = Nokogiri::XML(params[:xml]).css('Orders > Order')
+    def process_send_orders(xml)
+      order = xml.css('Orders > Order')
 
       @id = order.at('ID').text
       @name = order.at('CollectionData > Name').text
@@ -26,13 +34,16 @@ module FakeClearsale
       erb :order
     end
 
-    post "/GetOrderStatus" do
-      @order_id = params[:orderID]
+    def process_get_order_status(order_id)
+      @order_id = order_id
       order = order(@order_id)
 
-      @status, @score = order["status"], order["score"]
-
-      erb :order_status
+      if order
+        @status, @score = order["status"], order["score"]
+        erb :order_status, :format => :xml
+      else
+        erb :empty_response, :format => :xml
+      end
     end
 
     post "/GetAnalystComments" do
@@ -47,7 +58,10 @@ module FakeClearsale
     end
 
     def order(order_id)
-      Yajl::Parser.parse(redis.get("orders_#{order_id}"))
+      redis_response = redis.get "orders_#{order_id}"
+      unless redis_response.nil?
+        Yajl::Parser.parse(redis_response)
+      end
     end
 
     def clear_orders
@@ -70,7 +84,7 @@ module FakeClearsale
     end
 
     def status_and_score(name)
-      name == "Fulano Confiavel" ? ["APA", "95.9800"] : ["RPA", "40.9320"]
+      name == "McKay Thomas" ? ["APA", "95.9800"] : ["FRD", "40.9320"]
     end
 
     def wsdl

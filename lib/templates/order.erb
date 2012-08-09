@@ -1,13 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><SendOrdersResponse xmlns="http://www.clearsale.com.br/integration"><SendOrdersResult>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PackageStatus&gt;
-  &lt;TransactionID&gt;b184644f-fbb5-4c5d-a04f-bd1564ddf2a8&lt;/TransactionID&gt;
-  &lt;StatusCode&gt;00&lt;/StatusCode&gt;
-  &lt;Message&gt;OK&lt;/Message&gt;
-  &lt;Orders&gt;
-    &lt;Order&gt;
-      &lt;ID&gt;TS1234&lt;/ID&gt;
-      &lt;Status&gt;AMA&lt;/Status&gt;
-      &lt;Score&gt;21.1100&lt;/Score&gt;
-    &lt;/Order&gt;
-  &lt;/Orders&gt;
-&lt;/PackageStatus&gt;</SendOrdersResult></SendOrdersResponse></soap:Body></soap:Envelope>
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <SendOrdersResponse xmlns="http://www.clearsale.com.br/integration">
+      <SendOrdersResult>
+        <PackageStatus>
+          <TransactionID>b184644f-fbb5-4c5d-a04f-bd1564ddf2a8</TransactionID>
+          <StatusCode>00</StatusCode>
+          <Message>OK</Message>
+          <Orders>
+            <Order>
+              <ID><%= @id %></ID>
+              <Status><%= @status %></Status>
+              <Score><%= @score %></Score>
+            </Order>
+          </Orders>
+        </PackageStatus>
+      </SendOrdersResult>
+    </SendOrdersResponse>
+  </soap:Body>
+</soap:Envelope>
