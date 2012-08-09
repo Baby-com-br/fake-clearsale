@@ -2,7 +2,6 @@ module FakeClearsale
   class App < Sinatra::Base
     get "/" do
       path = File.join(File.dirname(__FILE__), "../clearsale/wsdl.xml")
-      # text File.read(path), :format => :xml
       send_file path
     end
 
