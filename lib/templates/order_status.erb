@@ -3,21 +3,15 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <soap:Body>
-    <SendOrdersResponse xmlns="http://www.clearsale.com.br/integration">
-      <SendOrdersResult>
-        <PackageStatus>
-          <TransactionID>b184644f-fbb5-4c5d-a04f-bd1564ddf2a8</TransactionID>
-          <StatusCode>00</StatusCode>
-          <Message>OK</Message>
-          <Orders>
-            <Order>
-              <ID><%= @id %></ID>
-              <Status><%= @status %></Status>
-              <Score><%= @score %></Score>
-            </Order>
-          </Orders>
-        </PackageStatus>
-      </SendOrdersResult>
-    </SendOrdersResponse>
+      &lt;ClearSale&gt;
+        &lt;Orders&gt;
+          &lt;Order&gt;
+            &lt;ID&gt;<%= @order_id %>&lt;/ID&gt;
+            &lt;Status&gt;<%= @status %>&lt;/Status&gt;
+            &lt;Score&gt;<%= @score %>&lt;/Score&gt;
+          &lt;/Order&gt;
+        &lt;/Orders&gt;
+      &lt;/ClearSale&gt;
   </soap:Body>
 </soap:Envelope>
+
