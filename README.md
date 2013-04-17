@@ -9,5 +9,5 @@ Webservice Fake da Clearsale, útil para executar testes de perfomance e integra
  - Execute `rvm use ruby-1.9.2`;
  - Instale o bundler com `gem install bundler`;
  - Instale as dependências do projeto com `bundle install`;
- - Execute `bundle exec unicorn <porta>` para iniciar o webservice.
+ - Execute `bundle exec unicorn -p <porta>` para iniciar o webservice.
 
