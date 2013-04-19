@@ -2,105 +2,126 @@
 require 'spec_helper'
 
 describe FakeClearsale::App do
-  before do
-    HTTPI.stub(:post)
-  end
-
   describe "POST SendOrders" do
     it "should respond approved as status" do
-      HTTPI.should_receive(:post)
-           .with(an_instance_of(HTTPI::Request))
-           .and_return(true)
-
-      post "/SendOrders", {
-        :xml => make_clearsale_xml("Fulano Confiavel", "1234")
-      }
+      post "/", make_clearsale_xml("McKay Thomas", "1234")
 
       last_response.body.should == <<-EOF
-<?xml version="1.0" encoding="utf-8"?>
-<string xmlns="http://www.clearsale.com.br/integration">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PackageStatus&gt;
-  &lt;TransactionID&gt;1234&lt;/TransactionID&gt;
-  &lt;StatusCode&gt;00&lt;/StatusCode&gt;
-  &lt;Message&gt;OK&lt;/Message&gt;
-  &lt;Orders&gt;
-    &lt;Order&gt;
-      &lt;ID&gt;1234&lt;/ID&gt;
-      &lt;Status&gt;APA&lt;/Status&gt;
-      &lt;Score&gt;95.9800&lt;/Score&gt;
-    &lt;/Order&gt;
-  &lt;/Orders&gt;
-&lt;/PackageStatus&gt;</string>
-      EOF
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">
+  <soap:Body>
+    <SendOrdersResponse xmlns=\"http://www.clearsale.com.br/integration\">
+      <SendOrdersResult>
+          &lt;PackageStatus&gt;
+            &lt;TransactionID&gt;b184644f-fbb5-4c5d-a04f-bd1564ddf2a8&lt;/TransactionID&gt;
+            &lt;StatusCode&gt;00&lt;/StatusCode&gt;
+            &lt;Message&gt;OK&lt;/Message&gt;
+            &lt;Orders&gt;
+              &lt;Order&gt;
+                &lt;ID&gt;1234;&lt;/ID&gt;
+                &lt;Status&gt;APA&lt;/Status&gt;
+                &lt;Score&gt;95.9800&lt;/Score&gt;
+              &lt;/Order&gt;
+            &lt;/Orders&gt;
+          &lt;/PackageStatus&gt;
+      </SendOrdersResult>
+    </SendOrdersResponse>
+  </soap:Body>
+</soap:Envelope>
+EOF
     end
 
     it "should respond reproved as status" do
-      post "/SendOrders", {
-        :xml => make_clearsale_xml("Fulano Estranho", "123iohqskjs4")
-      }
+      post "/", make_clearsale_xml("Fulano Estranho", "123iohqskjs4")
 
       last_response.body.should == <<-EOF
-<?xml version="1.0" encoding="utf-8"?>
-<string xmlns="http://www.clearsale.com.br/integration">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PackageStatus&gt;
-  &lt;TransactionID&gt;123iohqskjs4&lt;/TransactionID&gt;
-  &lt;StatusCode&gt;00&lt;/StatusCode&gt;
-  &lt;Message&gt;OK&lt;/Message&gt;
-  &lt;Orders&gt;
-    &lt;Order&gt;
-      &lt;ID&gt;123iohqskjs4&lt;/ID&gt;
-      &lt;Status&gt;RPA&lt;/Status&gt;
-      &lt;Score&gt;40.9320&lt;/Score&gt;
-    &lt;/Order&gt;
-  &lt;/Orders&gt;
-&lt;/PackageStatus&gt;</string>
-      EOF
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">
+  <soap:Body>
+    <SendOrdersResponse xmlns=\"http://www.clearsale.com.br/integration\">
+      <SendOrdersResult>
+          &lt;PackageStatus&gt;
+            &lt;TransactionID&gt;b184644f-fbb5-4c5d-a04f-bd1564ddf2a8&lt;/TransactionID&gt;
+            &lt;StatusCode&gt;00&lt;/StatusCode&gt;
+            &lt;Message&gt;OK&lt;/Message&gt;
+            &lt;Orders&gt;
+              &lt;Order&gt;
+                &lt;ID&gt;123iohqskjs4;&lt;/ID&gt;
+                &lt;Status&gt;FRD&lt;/Status&gt;
+                &lt;Score&gt;40.9320&lt;/Score&gt;
+              &lt;/Order&gt;
+            &lt;/Orders&gt;
+          &lt;/PackageStatus&gt;
+      </SendOrdersResult>
+    </SendOrdersResponse>
+  </soap:Body>
+</soap:Envelope>
+EOF
     end
   end
 
   describe "POST GetOrderStatus" do
-    it "should respond approved as status" do
-      post "/SendOrders", {
-        :xml => make_clearsale_xml("Fulano Confiavel", "lalala")
-      }
+    context "when order was approved" do
+      before do
+        post "/", {
+          :xml => make_clearsale_xml("McKay Thomas", "lalala")
+        }
+      end
 
-      post "/GetOrderStatus", { :orderID => "lalala" }
+      it "should respond approved as status" do
+        post "/GetOrderStatus", { :orderID => "lalala" }
 
-      last_response.body.should == <<-EOF
-<?xml version="1.0" encoding="utf-8"?>
-<string xmlns="http://www.clearsale.com.br/integration">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ClearSale&gt;
-  &lt;Orders&gt;
-    &lt;Order&gt;
-      &lt;ID&gt;lalala&lt;/ID&gt;
-      &lt;Status&gt;APA&lt;/Status&gt;
-      &lt;Score&gt;95.9800&lt;/Score&gt;
-    &lt;/Order&gt;
-  &lt;/Orders&gt;
-&lt;/ClearSale&gt;</string>
-      EOF
+        last_response.body.should == <<-EOF
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"
+  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+  xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">
+  <soap:Body>
+      &lt;ClearSale&gt;
+        &lt;Orders&gt;
+          &lt;Order&gt;
+            &lt;ID&gt;lalala&lt;/ID&gt;
+            &lt;Status&gt;APA&lt;/Status&gt;
+            &lt;Score&gt;95.9800&lt;/Score&gt;
+          &lt;/Order&gt;
+        &lt;/Orders&gt;
+      &lt;/ClearSale&gt;
+  </soap:Body>
+</soap:Envelope>
+EOF
+      end
+
     end
 
-    it "should respond reproved as status" do
-      post "/SendOrders", {
-        :xml => make_clearsale_xml("Fulano Estranho", "LOL")
-      }
+    context "when order was reproved" do
+      before do
+        post "/", {
+          :xml => make_clearsale_xml("Fulano Estranho", "LOL")
+        }
+      end
 
-      post "/GetOrderStatus", { :orderID => "LOL" }
+      it "should respond reproved as status" do
+        post "/GetOrderStatus", { :orderID => "LOL" }
 
-      last_response.body.should == <<-EOF
-<?xml version="1.0" encoding="utf-8"?>
-<string xmlns="http://www.clearsale.com.br/integration">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ClearSale&gt;
-  &lt;Orders&gt;
-    &lt;Order&gt;
-      &lt;ID&gt;LOL&lt;/ID&gt;
-      &lt;Status&gt;RPA&lt;/Status&gt;
-      &lt;Score&gt;40.9320&lt;/Score&gt;
-    &lt;/Order&gt;
-  &lt;/Orders&gt;
-&lt;/ClearSale&gt;</string>
-      EOF
+        last_response.body.should == <<-EOF
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"
+  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+  xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">
+  <soap:Body>
+      &lt;ClearSale&gt;
+        &lt;Orders&gt;
+          &lt;Order&gt;
+            &lt;ID&gt;LOL&lt;/ID&gt;
+            &lt;Status&gt;FRD&lt;/Status&gt;
+            &lt;Score&gt;40.9320&lt;/Score&gt;
+          &lt;/Order&gt;
+        &lt;/Orders&gt;
+      &lt;/ClearSale&gt;
+  </soap:Body>
+</soap:Envelope>
+EOF
+      end
     end
   end
 

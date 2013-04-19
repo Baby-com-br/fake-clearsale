@@ -155,7 +155,7 @@ def make_clearsale_xml(name, order_id)
         <!-- <GiftTypeID></GiftTypeID>
         <CategoryID></CategoryID>
         <CategoryName></CategoryName> -->
-      </Item>      
+      </Item>
 
     </Items>
   </Order>

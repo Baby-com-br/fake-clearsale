@@ -6,18 +6,23 @@ module FakeClearsale
 
     post "/" do
       doc = Nokogiri::XML(request.body.read.gsub(/&lt;/, "<").gsub(/&gt;/, ">"))
-      if !doc.xpath("//int:SendOrders").empty?
-        process_send_orders doc
-      elsif !doc.xpath("//int:GetOrderStatus").empty?
-        order_id = doc.xpath("//orderID").inner_text
-        process_get_order_status order_id
-      else
-        wsdl
-      end
+      process_send_orders doc
     end
 
+    post "/GetOrderStatus" do
+      process_get_order_status(params[:orderID])
+    end
+
+    post "/GetAnalystComments" do
+      @order_id = params[:orderID]
+
+      erb :analyst_comments
+    end
+
+    private
+
     def process_send_orders(xml)
-      order = xml.css('Orders > Order')
+      order = xml.at_css('Orders > Order')
 
       @id = order.at('ID').text
       @name = order.at('CollectionData > Name').text
@@ -46,13 +51,6 @@ module FakeClearsale
       end
     end
 
-    post "/GetAnalystComments" do
-      @order_id = params[:orderID]
-
-      erb :analyst_comments
-    end
-
-    private
     def save_order(order_id, params)
       redis.set "orders_#{order_id}", params.to_json
     end
