@@ -25,11 +25,10 @@ module FakeClearsale
       order = xml.at_css('Orders > Order')
 
       @id = order.at('ID').text
-      @name = order.at('CollectionData > Name').text
-      @status, @score = status_and_score(@name)
+      @credit_card = order.at('Payments CardNumber').text
+      @status, @score = status_and_score(@credit_card)
 
       save_order(@id, {
-        "name"   => @name,
         "status" => @status,
         "score"  => @score
       })
@@ -81,8 +80,15 @@ module FakeClearsale
       HTTPI.post request
     end
 
-    def status_and_score(name)
-      name == "McKay Thomas" ? ["APA", "95.9800"] : ["FRD", "40.9320"]
+    def status_and_score(credit_card)
+      case credit_card
+      when "4242424242424242"
+        ["APA", "95.9800"]
+      when "5555555555555555"
+        ["AMA", "70.9010"]
+      else
+        ["FRD", "40.9320"]
+      end
     end
 
     def wsdl

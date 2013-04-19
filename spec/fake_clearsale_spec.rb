@@ -4,7 +4,7 @@ require 'spec_helper'
 describe FakeClearsale::App do
   describe "POST SendOrders" do
     it "should respond approved as status" do
-      post "/", make_clearsale_xml("McKay Thomas", "1234")
+      post "/", make_clearsale_xml("1234", "4242424242424242")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -31,8 +31,8 @@ describe FakeClearsale::App do
 EOF
     end
 
-    it "should respond reproved as status" do
-      post "/", make_clearsale_xml("Fulano Estranho", "123iohqskjs4")
+    it "should respond manual analysis as status" do
+      post "/", make_clearsale_xml("8321", "5555555555555555")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -46,7 +46,35 @@ EOF
             &lt;Message&gt;OK&lt;/Message&gt;
             &lt;Orders&gt;
               &lt;Order&gt;
-                &lt;ID&gt;123iohqskjs4;&lt;/ID&gt;
+                &lt;ID&gt;8321;&lt;/ID&gt;
+                &lt;Status&gt;AMA&lt;/Status&gt;
+                &lt;Score&gt;70.9010&lt;/Score&gt;
+              &lt;/Order&gt;
+            &lt;/Orders&gt;
+          &lt;/PackageStatus&gt;
+      </SendOrdersResult>
+    </SendOrdersResponse>
+  </soap:Body>
+</soap:Envelope>
+EOF
+    end
+
+    it "should respond reproved as status" do
+      post "/", make_clearsale_xml("4321", "5555555555554444")
+
+      last_response.body.should == <<-EOF
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">
+  <soap:Body>
+    <SendOrdersResponse xmlns=\"http://www.clearsale.com.br/integration\">
+      <SendOrdersResult>
+          &lt;PackageStatus&gt;
+            &lt;TransactionID&gt;b184644f-fbb5-4c5d-a04f-bd1564ddf2a8&lt;/TransactionID&gt;
+            &lt;StatusCode&gt;00&lt;/StatusCode&gt;
+            &lt;Message&gt;OK&lt;/Message&gt;
+            &lt;Orders&gt;
+              &lt;Order&gt;
+                &lt;ID&gt;4321;&lt;/ID&gt;
                 &lt;Status&gt;FRD&lt;/Status&gt;
                 &lt;Score&gt;40.9320&lt;/Score&gt;
               &lt;/Order&gt;

@@ -20,7 +20,7 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
 
-def make_clearsale_xml(name, order_id)
+def make_clearsale_xml(order_id, credit_card_number)
   <<-EOXML
 <?xml version="1.0" encoding="utf-8"?>
 <ClearSale>
@@ -51,7 +51,7 @@ def make_clearsale_xml(name, order_id)
       <Type>1</Type>
       <LegalDocument1>03042445030</LegalDocument1>
       <!-- <LegalDocument2></LegalDocument2> -->
-      <Name>#{name}</Name>
+      <Name>Awesome Buyer</Name>
       <!-- <BirthDate></BirthDate> -->
       <Email>foo@example.com</Email>
       <!-- <Genre></Genre> -->
@@ -83,7 +83,7 @@ def make_clearsale_xml(name, order_id)
       <Type>1</Type>
       <LegalDocument1>03042445030</LegalDocument1>
       <!-- <LegalDocument2></LegalDocument2> -->
-      <Name>#{name}</Name>
+      <Name>Awesome Buyer</Name>
       <!-- <BirthDate></BirthDate> -->
       <Email>foo@example.com</Email>
       <!-- <Genre></Genre> -->
@@ -117,6 +117,13 @@ def make_clearsale_xml(name, order_id)
         <Amount>100</Amount>
         <PaymentTypeID>11</PaymentTypeID>
         <QtyInstallments>8</QtyInstallments>
+
+        <CardNumber>#{credit_card_number}</CardNumber>
+        <CardBin>#{credit_card_number[0..5]}</CardBin>
+        <CardType>BABYCARD</CardType>
+        <CardExpirationDate>09/2020</CardExpirationDate>
+        <Name>Awesome Buyer</Name>
+        <LegalDocument>03042445030</LegalDocument>
         <!-- <Interest></Interest>
         <InterestValue></InterestValue> -->
 
