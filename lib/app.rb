@@ -6,11 +6,15 @@ module FakeClearsale
 
     post "/" do
       doc = Nokogiri::XML(request.body.read.gsub(/&lt;/, "<").gsub(/&gt;/, ">"))
-      process_send_orders doc
-    end
 
-    post "/GetOrderStatus" do
-      process_get_order_status(params[:orderID])
+      if !doc.xpath("//int:SendOrders").empty?
+        process_send_orders doc
+      elsif !doc.xpath("//int:GetOrderStatus").empty?
+        order_id = doc.xpath("//orderID").inner_text
+        process_get_order_status order_id
+      else
+        wsdl
+      end
     end
 
     post "/GetAnalystComments" do
