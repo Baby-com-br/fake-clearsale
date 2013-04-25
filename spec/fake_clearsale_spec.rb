@@ -4,7 +4,7 @@ require 'spec_helper'
 describe FakeClearsale::App do
   describe "POST SendOrders" do
     it "should respond approved as status" do
-      post "/", make_clearsale_xml("1234", "4242424242424242")
+      post "/", send_orders_xml("1234", "4242424242424242")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -32,7 +32,7 @@ EOF
     end
 
     it "should respond manual analysis as status" do
-      post "/", make_clearsale_xml("8321", "5555555555555555")
+      post "/", send_orders_xml("8321", "5555555555555555")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -60,7 +60,7 @@ EOF
     end
 
     it "should respond reproved as status" do
-      post "/", make_clearsale_xml("4321", "5555555555554444")
+      post "/", send_orders_xml("4321", "5555555555554444")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -91,13 +91,11 @@ EOF
   describe "POST GetOrderStatus" do
     context "when order was approved" do
       before do
-        post "/", {
-          :xml => make_clearsale_xml("McKay Thomas", "lalala")
-        }
+        post "/", send_orders_xml("9324", "4242424242424242")
       end
 
       it "should respond approved as status" do
-        post "/GetOrderStatus", { :orderID => "lalala" }
+        post "/", get_status_xml('9324')
 
         last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -108,7 +106,7 @@ EOF
       &lt;ClearSale&gt;
         &lt;Orders&gt;
           &lt;Order&gt;
-            &lt;ID&gt;lalala&lt;/ID&gt;
+            &lt;ID&gt;9324&lt;/ID&gt;
             &lt;Status&gt;APA&lt;/Status&gt;
             &lt;Score&gt;95.9800&lt;/Score&gt;
           &lt;/Order&gt;
@@ -124,12 +122,12 @@ EOF
     context "when order was reproved" do
       before do
         post "/", {
-          :xml => make_clearsale_xml("Fulano Estranho", "LOL")
+          :xml => send_orders_xml("Fulano Estranho", "LOL")
         }
       end
 
       it "should respond reproved as status" do
-        post "/GetOrderStatus", { :orderID => "LOL" }
+        post "/", get_status_xml('LOL')
 
         last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
