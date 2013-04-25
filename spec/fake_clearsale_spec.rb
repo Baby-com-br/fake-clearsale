@@ -4,7 +4,7 @@ require 'spec_helper'
 describe FakeClearsale::App do
   describe "POST SendOrders" do
     it "should respond approved as status" do
-      post "/", send_orders_xml("1234", "4242424242424242")
+      post "/", send_orders_xml("1234", "08")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -32,7 +32,7 @@ EOF
     end
 
     it "should respond manual analysis as status" do
-      post "/", send_orders_xml("8321", "5555555555555555")
+      post "/", send_orders_xml("8321", "11")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -60,7 +60,7 @@ EOF
     end
 
     it "should respond reproved as status" do
-      post "/", send_orders_xml("4321", "5555555555554444")
+      post "/", send_orders_xml("4321", "12")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -91,7 +91,7 @@ EOF
   describe "POST GetOrderStatus" do
     context "when order was approved" do
       before do
-        post "/", send_orders_xml("9324", "4242424242424242")
+        post "/", send_orders_xml("9324", "07")
       end
 
       it "should respond approved as status" do
@@ -121,13 +121,11 @@ EOF
 
     context "when order was reproved" do
       before do
-        post "/", {
-          :xml => send_orders_xml("Fulano Estranho", "LOL")
-        }
+        post "/", send_orders_xml("3253", "12")
       end
 
       it "should respond reproved as status" do
-        post "/", get_status_xml('LOL')
+        post "/", get_status_xml('3253')
 
         last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -138,7 +136,7 @@ EOF
       &lt;ClearSale&gt;
         &lt;Orders&gt;
           &lt;Order&gt;
-            &lt;ID&gt;LOL&lt;/ID&gt;
+            &lt;ID&gt;3253&lt;/ID&gt;
             &lt;Status&gt;FRD&lt;/Status&gt;
             &lt;Score&gt;40.9320&lt;/Score&gt;
           &lt;/Order&gt;

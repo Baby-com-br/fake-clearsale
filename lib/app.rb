@@ -29,8 +29,8 @@ module FakeClearsale
       order = xml.at_css('Orders > Order')
 
       @id = order.at('ID').text
-      @credit_card = order.at('Payments CardNumber').text
-      @status, @score = status_and_score(@credit_card)
+      @expiration_date = order.at('Payments CardExpirationDate').text
+      @status, @score = status_and_score(@expiration_date)
 
       save_order(@id, {
         "status" => @status,
@@ -84,14 +84,16 @@ module FakeClearsale
       HTTPI.post request
     end
 
-    def status_and_score(credit_card)
-      case credit_card
-      when "4242424242424242"
-        ["APA", "95.9800"]
-      when "5555555555555555"
+    def status_and_score(expiration_date)
+      expiration_month = expiration_date.split('/').first
+
+      case expiration_month
+      when "11"
         ["AMA", "70.9010"]
-      else
+      when "12"
         ["FRD", "40.9320"]
+      else
+        ["APA", "95.9800"]
       end
     end
 

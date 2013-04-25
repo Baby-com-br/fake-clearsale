@@ -13,8 +13,8 @@ Webservice Fake da Clearsale, útil para executar testes de perfomance e integra
 
 # Utilização
 
-A resposta da análise é baseada no número do cartão de crédito da compra.
+A resposta da análise é baseada no mês da data de expiração do cartão de crédito utilizado na compra.
 
-* Análise manual (manual_analysis/AMA): `5555 5555 5555 5555`
-* Aprovado (approved/APA): `4242 4242 4242 4242`
-* Fraude (fraud/FRD): Qualquer número de cartão será marcado como fraude (exceto dos itens acima).
+* Análise manual (manual_analysis/AMA): `11`
+* Fraude (fraud/FRD): `12`
+* Aprovado (approved/APA): Qualquer outro mês que não seja 11 e 12 terá sua respectiva compra aprovada.

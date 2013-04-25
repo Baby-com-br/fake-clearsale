@@ -20,7 +20,7 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
 
-def send_orders_xml(order_id, credit_card_number)
+def send_orders_xml(order_id, expiration_month)
   <<-EOXML
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.clearsale.com.br/integration" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
@@ -122,10 +122,10 @@ def send_orders_xml(order_id, credit_card_number)
                   <PaymentTypeID>11</PaymentTypeID>
                   <QtyInstallments>8</QtyInstallments>
 
-                  <CardNumber>#{credit_card_number}</CardNumber>
-                  <CardBin>#{credit_card_number[0..5]}</CardBin>
+                  <CardNumber>4242424242424242</CardNumber>
+                  <CardBin>4242</CardBin>
                   <CardType>BABYCARD</CardType>
-                  <CardExpirationDate>09/2020</CardExpirationDate>
+                  <CardExpirationDate>#{expiration_month}/2020</CardExpirationDate>
                   <Name>Awesome Buyer</Name>
                   <LegalDocument>03042445030</LegalDocument>
                   <!-- <Interest></Interest>
