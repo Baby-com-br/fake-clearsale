@@ -6,6 +6,7 @@ module FakeClearsale
 
     post "/" do
       doc = Nokogiri::XML(request.body.read.gsub(/&lt;/, "<").gsub(/&gt;/, ">"))
+
       if !doc.xpath("//int:SendOrders").empty?
         process_send_orders doc
       elsif !doc.xpath("//int:GetOrderStatus").empty?
@@ -16,15 +17,22 @@ module FakeClearsale
       end
     end
 
+    post "/GetAnalystComments" do
+      @order_id = params[:orderID]
+
+      erb :analyst_comments
+    end
+
+    private
+
     def process_send_orders(xml)
-      order = xml.css('Orders > Order')
+      order = xml.at_css('Orders > Order')
 
       @id = order.at('ID').text
-      @name = order.at('CollectionData > Name').text
-      @status, @score = status_and_score(@name)
+      @card_holder = order.at('Payments Name').text
+      @status, @score = status_and_score(@card_holder)
 
       save_order(@id, {
-        "name"   => @name,
         "status" => @status,
         "score"  => @score
       })
@@ -46,13 +54,6 @@ module FakeClearsale
       end
     end
 
-    post "/GetAnalystComments" do
-      @order_id = params[:orderID]
-
-      erb :analyst_comments
-    end
-
-    private
     def save_order(order_id, params)
       redis.set "orders_#{order_id}", params.to_json
     end
@@ -83,8 +84,15 @@ module FakeClearsale
       HTTPI.post request
     end
 
-    def status_and_score(name)
-      name == "McKay Thomas" ? ["APA", "95.9800"] : ["FRD", "40.9320"]
+    def status_and_score(card_holder)
+      case card_holder.downcase
+      when "manual analysis"
+        ["AMA", "70.9010"]
+      when "fraud"
+        ["FRD", "40.9320"]
+      else
+        ["APA", "95.9800"]
+      end
     end
 
     def wsdl
