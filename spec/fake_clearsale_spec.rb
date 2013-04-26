@@ -32,7 +32,7 @@ EOF
     end
 
     it "should respond manual analysis as status" do
-      post "/", send_orders_xml("8321", "MaNuaL_AnAlYsIs")
+      post "/", send_orders_xml("8321", "MaNuaL AnAlYsIs")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>

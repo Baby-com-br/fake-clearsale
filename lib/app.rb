@@ -86,7 +86,7 @@ module FakeClearsale
 
     def status_and_score(card_holder)
       case card_holder.downcase
-      when "manual_analysis"
+      when "manual analysis"
         ["AMA", "70.9010"]
       when "fraud"
         ["FRD", "40.9320"]

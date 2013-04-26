@@ -15,6 +15,6 @@ Webservice Fake da Clearsale, útil para executar testes de perfomance e integra
 
 A resposta da análise é baseada no nome do cartão utilizado na compra.
 
-* Análise manual (manual_analysis/AMA): `manual_analysis`
+* Análise manual (manual_analysis/AMA): `manual analysis`
 * Fraude (fraud/FRD): `fraud`
-* Aprovado (approved/APA): Qualquer outro nome que não seja manual_analysis ou fraud terá sua respectiva compra aprovada.
+* Aprovado (approved/APA): Qualquer outro nome que não seja `manual analysis` ou `fraud` terá sua respectiva compra aprovada.
