@@ -4,7 +4,7 @@ require 'spec_helper'
 describe FakeClearsale::App do
   describe "POST SendOrders" do
     it "should respond approved as status" do
-      post "/", send_orders_xml("1234", "08")
+      post "/", send_orders_xml("1234", "Awesome Buyer")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -32,7 +32,7 @@ EOF
     end
 
     it "should respond manual analysis as status" do
-      post "/", send_orders_xml("8321", "11")
+      post "/", send_orders_xml("8321", "MaNuaL_AnAlYsIs")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -60,7 +60,7 @@ EOF
     end
 
     it "should respond reproved as status" do
-      post "/", send_orders_xml("4321", "12")
+      post "/", send_orders_xml("4321", "FrAuD")
 
       last_response.body.should == <<-EOF
 <?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -91,7 +91,7 @@ EOF
   describe "POST GetOrderStatus" do
     context "when order was approved" do
       before do
-        post "/", send_orders_xml("9324", "07")
+        post "/", send_orders_xml("9324", "Another Awesome Buyer")
       end
 
       it "should respond approved as status" do
@@ -121,7 +121,7 @@ EOF
 
     context "when order was reproved" do
       before do
-        post "/", send_orders_xml("3253", "12")
+        post "/", send_orders_xml("3253", "FrAuD")
       end
 
       it "should respond reproved as status" do
