@@ -1,11 +1,17 @@
 test:
-  callback_url: 
+  callback_url:
   redis:
     host: localhost
     port: 6379
 
 development:
-  callback_url: 
+  callback_url:
+  redis:
+    host: localhost
+    port: 6379
+
+production:
+  callback_url:
   redis:
     host: localhost
     port: 6379
