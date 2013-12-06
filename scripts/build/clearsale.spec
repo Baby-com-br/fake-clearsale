@@ -78,8 +78,8 @@ no description given
   fi
 
 %post
-  if [[ ! -L %{__apps_path}%{__app_name}/script/unicorn/init ]]; then
-    ln -fs %{__apps_path}%{__app_name}/script/unicorn/init %{_sysconfdir}/init.d/unicorn_%{__app_name}
+  if [[ ! -L %{__apps_path}%{__app_name}/scripts/fake-clearsale-init.sh ]]; then
+    ln -fs %{__apps_path}%{__app_name}/scripts/fake-clearsale-init.sh %{_sysconfdir}/init.d/unicorn_%{__app_name}
   fi
   if [[ ! -L %{__apps_path}%{__app_name}/log ]]; then
     ln -s /eden/log %{__apps_path}%{__app_name}/log
