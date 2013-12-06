@@ -13,10 +13,10 @@
 
 %define __bundle_bin %(which bundle)
 %define __useradd_bin %(which useradd)
-%define __app_name clearsale
+%define __app_name fake-clearsale
 %define __apps_path /eden/app/
 
-Name:        clearsale
+Name:        fake-clearsale
 Version:     %{version}
 Release:     %{?dist}
 Summary:     no description given
@@ -42,6 +42,10 @@ no description given
   %{__cp} -r %{__project_dir}/scripts/*       %{_builddir}/%{version}/%{__apps_path}/scripts/.
   %{__cp} -r %{__project_dir}/lib/*           %{_builddir}/%{version}/%{__apps_path}/lib/.
   %{__cp} -r %{__project_dir}/%{__app_name}/* %{_builddir}/%{version}/%{__apps_path}/%{__app_name}/.
+
+  cd %{_builddir}/%{version}/%{__apps_path}/%{__app_name}
+  %{__bundle_bin} install --deployment --binstubs --without test:development
+  cd -
 
 %clean
   %{__rm} -rf %{_builddir}/%{version}/%{__apps_path}
