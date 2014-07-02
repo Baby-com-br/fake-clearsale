@@ -90,6 +90,8 @@ module FakeClearsale
         ["AMA", "70.9010"]
       when "fraud"
         ["FRD", "40.9320"]
+      when "reject"
+        ["RPM", "45.8273"]
       else
         ["APA", "95.9800"]
       end
